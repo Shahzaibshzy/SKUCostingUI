@@ -133,9 +133,17 @@ export function SkuMaintenancePage() {
 
   const componentCost = useMemo(() => sumComponentCost(components), [components])
   const amazonFeeAmount = useMemo(() => computeAmazonFee(sellingPrice), [sellingPrice])
+  const totalCost = useMemo(
+    () => componentCost + shippingFee + amazonFeeAmount,
+    [componentCost, shippingFee, amazonFeeAmount]
+  )
   const profit = useMemo(
-    () => sellingPrice - componentCost - shippingFee - amazonFeeAmount,
-    [sellingPrice, componentCost, shippingFee, amazonFeeAmount]
+    () => sellingPrice - totalCost,
+    [sellingPrice, totalCost]
+  )
+  const profitPercent = useMemo(
+    () => (totalCost > 0 ? (profit / totalCost) * 100 : 0),
+    [profit, totalCost]
   )
 
   const updateComponent = (compId: string, updates: Partial<SkuComponent>) => {
@@ -533,6 +541,10 @@ export function SkuMaintenancePage() {
                 <dt className="text-gray-600">Amazon Fee</dt>
                 <dd className="font-medium text-gray-900">{amazonFeeAmount.toFixed(2)}</dd>
               </div>
+              <div className="flex justify-between transition-colors duration-200 ease-in-out">
+                <dt className="text-gray-600">Total Cost</dt>
+                <dd className="font-medium text-gray-900">{totalCost.toFixed(2)}</dd>
+              </div>
               <div className="border-t border-gray-200 pt-3 mt-3">
                 <div className="flex justify-between items-center transition-colors duration-200 ease-in-out">
                   <dt className="text-gray-700 font-medium">Profit</dt>
@@ -542,6 +554,16 @@ export function SkuMaintenancePage() {
                     }`}
                   >
                     {profit.toFixed(2)}
+                  </dd>
+                </div>
+                <div className="flex justify-between items-center transition-colors duration-200 ease-in-out mt-2">
+                  <dt className="text-gray-700 font-medium">Profit %</dt>
+                  <dd
+                    className={`font-bold text-lg ${
+                      profit > 0 ? 'text-green-600' : 'text-red-600'
+                    }`}
+                  >
+                    {profitPercent.toFixed(2)} %
                   </dd>
                 </div>
               </div>

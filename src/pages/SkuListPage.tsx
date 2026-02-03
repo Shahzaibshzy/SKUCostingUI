@@ -9,6 +9,14 @@ import { exportSkuListToCsv } from '@/utils/csvExport'
 import type { SkuListItem } from '@/types'
 import { formatCurrency } from '@/utils/calculations'
 
+function rowProfit(row: SkuListItem) {
+  const amazonFee = Math.round(row.sellingPrice * 0.098 * 100) / 100
+  const totalCostAll = row.totalCost + row.shippingFee + amazonFee
+  const profit = row.sellingPrice - totalCostAll
+  const profitPct = totalCostAll > 0 ? (profit / totalCostAll) * 100 : 0
+  return { profit, profitPct }
+}
+
 export function SkuListPage() {
   const navigate = useNavigate()
   const toast = useToast()
@@ -121,13 +129,15 @@ export function SkuListPage() {
                     <th className="min-w-[10rem] px-3 py-3 font-medium sm:min-w-[12rem] md:min-w-[14rem] sm:px-4">Title</th>
                     <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[3.5rem] sm:px-4">Qty</th>
                     <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[4rem] sm:px-4">New Qty</th>
-                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[4rem] sm:px-4">Status</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[4rem] sm:px-4">Qty Status</th>
                     <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[4rem] sm:px-4">Main Image</th>
                     <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[5rem] sm:px-4">Total Cost</th>
                     <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[5rem] sm:px-4">Shipping Fee</th>
                     <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[5rem] sm:px-4">Selling Price</th>
                     <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[5rem] sm:px-4">New Price</th>
-                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[4rem] sm:px-4">Statu</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[4rem] sm:px-4">Status</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[5rem] sm:px-4">Profit</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[5rem] sm:px-4">Profit %</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -199,6 +209,26 @@ export function SkuListPage() {
                       </td>
                       <td className="whitespace-nowrap px-3 py-3 sm:px-4"></td>
                       <td className="whitespace-nowrap px-3 py-3 sm:px-4"></td>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">
+                        {(() => {
+                          const { profit } = rowProfit(row)
+                          return (
+                            <span className={profit > 0 ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
+                              {formatCurrency(profit)}
+                            </span>
+                          )
+                        })()}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">
+                        {(() => {
+                          const { profit, profitPct } = rowProfit(row)
+                          return (
+                            <span className={profit > 0 ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
+                              {profitPct.toFixed(2)} %
+                            </span>
+                          )
+                        })()}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

@@ -133,6 +133,10 @@ export function SkuMaintenancePage() {
 
   const componentCost = useMemo(() => sumComponentCost(components), [components])
   const amazonFeeAmount = useMemo(() => computeAmazonFee(sellingPrice), [sellingPrice])
+  const profit = useMemo(
+    () => sellingPrice - componentCost - shippingFee - amazonFeeAmount,
+    [sellingPrice, componentCost, shippingFee, amazonFeeAmount]
+  )
 
   const updateComponent = (compId: string, updates: Partial<SkuComponent>) => {
     setComponents((prev) =>
@@ -528,6 +532,18 @@ export function SkuMaintenancePage() {
               <div className="flex justify-between transition-colors duration-200 ease-in-out">
                 <dt className="text-gray-600">Amazon Fee</dt>
                 <dd className="font-medium text-gray-900">{amazonFeeAmount.toFixed(2)}</dd>
+              </div>
+              <div className="border-t border-gray-200 pt-3 mt-3">
+                <div className="flex justify-between items-center transition-colors duration-200 ease-in-out">
+                  <dt className="text-gray-700 font-medium">Profit</dt>
+                  <dd
+                    className={`font-bold text-lg ${
+                      profit > 0 ? 'text-green-600' : 'text-red-600'
+                    }`}
+                  >
+                    {profit.toFixed(2)}
+                  </dd>
+                </div>
               </div>
             </dl>
           </div>

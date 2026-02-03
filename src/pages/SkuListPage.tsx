@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useSkuList } from '@/hooks/useSkuList'
 import { usePagination } from '@/hooks/usePagination'
-import { Button, Badge } from '@/components/ui'
+import { Button, Badge, EditIcon } from '@/components/ui'
 import { useToast } from '@/hooks/useToast'
 import { APP_CONFIG } from '@/config/app.config'
 import { exportSkuListToCsv } from '@/utils/csvExport'
@@ -58,7 +58,7 @@ export function SkuListPage() {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full min-w-0">
       <h1 className="mb-4 text-xl font-bold text-gray-900 transition-all duration-300 ease-in-out sm:mb-6 sm:text-2xl">
         SKUs
       </h1>
@@ -98,7 +98,7 @@ export function SkuListPage() {
         Total matching records: {data?.total ?? 0}
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow duration-300 ease-in-out hover:shadow-md">
+      <div className="w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow duration-300 ease-in-out hover:shadow-md">
         {isLoading && (
           <div className="animate-in-fade p-8 text-center text-gray-500">Loading...</div>
         )}
@@ -107,27 +107,27 @@ export function SkuListPage() {
         )}
         {data && !isLoading && (
           <>
-            <div className="overflow-x-auto overscroll-x-contain scroll-smooth">
-              <table className="w-full min-w-[1000px] border-collapse text-left text-sm">
+            <div className="w-full overflow-x-auto overscroll-x-contain scroll-smooth">
+              <table className="w-full min-w-[1100px] table-auto border-collapse text-left text-sm sm:min-w-[1300px] md:min-w-[1500px] md:text-base">
                 <thead>
                   <tr className="bg-[#3b82f6] text-white">
-                    <th className="px-3 py-3 font-medium sm:px-4">#</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">SKU Code</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">ASIN</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">Active</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">Fulfilled By</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">Edit Amazon / $</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">Condition</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">Title</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">Qty</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">New Qty</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">Status</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">Main Image</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">Total Cost</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">Shipping Fee</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">Selling Price</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">New Price</th>
-                    <th className="px-3 py-3 font-medium sm:px-4">Statu</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[2.5rem] sm:px-4">#</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[7rem] sm:px-4">SKU Code</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[6rem] sm:px-4">ASIN</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[5rem] sm:px-4">Active</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[5rem] sm:px-4">Fulfilled By</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[6rem] sm:px-4">Edit Amazon / $</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[5rem] sm:px-4">Condition</th>
+                    <th className="min-w-[10rem] px-3 py-3 font-medium sm:min-w-[12rem] md:min-w-[14rem] sm:px-4">Title</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[3.5rem] sm:px-4">Qty</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[4rem] sm:px-4">New Qty</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[4rem] sm:px-4">Status</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[4rem] sm:px-4">Main Image</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[5rem] sm:px-4">Total Cost</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[5rem] sm:px-4">Shipping Fee</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[5rem] sm:px-4">Selling Price</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[5rem] sm:px-4">New Price</th>
+                    <th className="whitespace-nowrap px-3 py-3 font-medium sm:min-w-[4rem] sm:px-4">Statu</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -139,44 +139,66 @@ export function SkuListPage() {
                         idx % 2 === 0 ? 'bg-[#dcfce7]' : 'bg-[#ffedd5]'
                       }`}
                     >
-                      <td className="px-3 py-2.5 sm:px-4">{(pagination.page - 1) * pagination.pageSize + idx + 1}</td>
-                      <td className="px-3 py-2.5 font-medium sm:px-4">{row.skuCode}</td>
-                      <td className="px-3 py-2.5 sm:px-4">{row.asin}</td>
-                      <td className="px-3 py-2.5 sm:px-4">
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">{(pagination.page - 1) * pagination.pageSize + idx + 1}</td>
+                      <td className="min-w-0 whitespace-nowrap px-3 py-3 font-medium sm:px-4">{row.skuCode}</td>
+                      <td className="min-w-0 whitespace-nowrap px-3 py-3 sm:px-4">{row.asin}</td>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">
                         <Badge status={row.active} />
                       </td>
-                      <td className="px-3 py-2.5 sm:px-4">{row.fulfilledBy}</td>
-                      <td className="px-3 py-2.5 sm:px-4">
-                        <button type="button" className="mr-1 rounded bg-blue-500 p-1.5 text-white transition-colors duration-200 ease-in-out hover:bg-blue-600 active:scale-95" title="Amazon">a</button>
-                        <button type="button" className="rounded bg-blue-500 p-1.5 text-white transition-all duration-200 ease-in-out hover:bg-blue-600 active:scale-95" title="Price">$</button>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">{row.fulfilledBy}</td>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">
+                        <div className="flex gap-1">
+                          <button
+                            type="button"
+                            className="flex h-7 w-7 shrink-0 items-center justify-center rounded bg-amber-500 text-white transition-colors duration-200 ease-in-out hover:bg-amber-600 active:scale-95"
+                            title="Edit on Amazon"
+                          >
+                            <span className="text-xs font-bold">a</span>
+                          </button>
+                          <button
+                            type="button"
+                            className="flex h-7 w-7 shrink-0 items-center justify-center rounded bg-emerald-500 text-white transition-colors duration-200 ease-in-out hover:bg-emerald-600 active:scale-95"
+                            title="Edit Price"
+                          >
+                            <span className="text-xs font-bold">$</span>
+                          </button>
+                        </div>
                       </td>
-                      <td className="px-3 py-2.5 sm:px-4">{row.condition}</td>
-                      <td className="max-w-[140px] truncate px-3 py-2.5 sm:max-w-[180px] sm:px-4" title={row.title}>{row.title}</td>
-                      <td className="px-3 py-2.5 sm:px-4">
-                        <span className="inline-flex items-center gap-1">
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">{row.condition}</td>
+                      <td className="min-w-[10rem] max-w-[12rem] truncate px-3 py-3 sm:max-w-[16rem] md:max-w-[20rem] sm:px-4" title={row.title}>{row.title}</td>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">
+                        <button
+                          type="button"
+                          className="inline-flex items-center gap-1 text-slate-600 transition-colors duration-200 ease-in-out hover:text-blue-600"
+                          title="Quantity Update"
+                        >
                           {row.qty}
-                          <span className="cursor-pointer text-gray-500 transition-colors duration-200 ease-in-out hover:text-gray-700" title="Edit">✎</span>
-                        </span>
+                          <EditIcon className="text-current" />
+                        </button>
                       </td>
-                      <td className="px-3 py-2.5 sm:px-4"></td>
-                      <td className="px-3 py-2.5 sm:px-4"></td>
-                      <td className="px-3 py-2.5 sm:px-4">
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4"></td>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4"></td>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">
                         {row.mainImageUrl ? (
-                          <img src={row.mainImageUrl} alt="" className="h-10 w-10 rounded border border-gray-200 object-cover transition-transform duration-200 ease-in-out group-hover:scale-105" />
+                          <img src={row.mainImageUrl} alt="" className="h-10 w-10 shrink-0 rounded border border-gray-200 object-cover transition-transform duration-200 ease-in-out sm:h-12 sm:w-12 group-hover:scale-105" />
                         ) : (
                           <span className="text-gray-400">—</span>
                         )}
                       </td>
-                      <td className="px-3 py-2.5 sm:px-4">{formatCurrency(row.totalCost)}</td>
-                      <td className="px-3 py-2.5 sm:px-4">{formatCurrency(row.shippingFee)}</td>
-                      <td className="px-3 py-2.5 sm:px-4">
-                        <span className="inline-flex items-center gap-1">
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">{formatCurrency(row.totalCost)}</td>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">{formatCurrency(row.shippingFee)}</td>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4">
+                        <button
+                          type="button"
+                          className="ml-auto inline-flex items-center gap-1 text-slate-900 transition-colors duration-200 ease-in-out hover:text-blue-600"
+                          title="Edit Price"
+                        >
                           {formatCurrency(row.sellingPrice)}
-                          <span className="cursor-pointer text-gray-500 transition-colors duration-200 ease-in-out hover:text-gray-700" title="Edit">✎</span>
-                        </span>
+                          <EditIcon className="text-current" />
+                        </button>
                       </td>
-                      <td className="px-3 py-2.5 sm:px-4"></td>
-                      <td className="px-3 py-2.5 sm:px-4"></td>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4"></td>
+                      <td className="whitespace-nowrap px-3 py-3 sm:px-4"></td>
                     </tr>
                   ))}
                 </tbody>

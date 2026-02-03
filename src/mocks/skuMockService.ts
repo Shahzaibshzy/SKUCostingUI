@@ -7,11 +7,14 @@ import type {
   Category,
   ComponentOption,
 } from '@/types'
-import { MOCK_SKU_LIST, getMockSkuDetailById } from './data'
 import { getCustomDetail, setCustomSku, mergeWithBaseList } from './skuStore'
-import { MOCK_BUNDLE_TYPES } from './data/bundleTypes'
-import { MOCK_CATEGORIES } from './data/categories'
-import { MOCK_COMPONENT_OPTIONS } from './data/componentOptions'
+import {
+  getReferenceSkuList,
+  getReferenceSkuDetailById,
+  getReferenceBundleTypes,
+  getReferenceCategories,
+  getReferenceComponentOptions,
+} from './data/referenceMappers'
 
 function paginate<T>(arr: T[], page: number, pageSize: number): { data: T[]; total: number; totalPages: number } {
   const total = arr.length
@@ -32,10 +35,12 @@ function filterBySearch(items: SkuListItem[], search: string | undefined): SkuLi
   )
 }
 
-/** Mock SKU list with pagination and search - merges base list with in-memory created/updated items */
+const baseSkuList = getReferenceSkuList()
+
+/** Mock SKU list with pagination and search - merges reference list with in-memory created/updated items */
 export function fetchSkuList(params: ListQueryParams): Promise<PaginatedResponse<SkuListItem>> {
   return new Promise((resolve) => {
-    const merged = mergeWithBaseList(MOCK_SKU_LIST)
+    const merged = mergeWithBaseList(baseSkuList)
     const filtered = filterBySearch(merged, params.search)
     const { data, total, totalPages } = paginate(filtered, params.page, params.pageSize)
     setTimeout(
@@ -52,7 +57,7 @@ export function fetchSkuList(params: ListQueryParams): Promise<PaginatedResponse
   })
 }
 
-/** Mock get SKU by id - custom (created/updated) first, then base mock */
+/** Mock get SKU by id - custom (created/updated) first, then reference data */
 export function fetchSkuById(id: string): Promise<SkuDetail | null> {
   return new Promise((resolve) => {
     const custom = getCustomDetail(id)
@@ -60,7 +65,7 @@ export function fetchSkuById(id: string): Promise<SkuDetail | null> {
       setTimeout(() => resolve(custom), 50)
       return
     }
-    const detail = getMockSkuDetailById(id)
+    const detail = getReferenceSkuDetailById(id)
     setTimeout(() => resolve(detail ?? null), 100)
   })
 }
@@ -92,19 +97,19 @@ export function renameSkuCode(_id: string, newCode: string): Promise<{ skuCode: 
   return new Promise((resolve) => setTimeout(() => resolve({ skuCode: newCode }), 100))
 }
 
-/** Mock bundle types */
+/** Mock bundle types - from reference data */
 export function fetchBundleTypes(): Promise<BundleType[]> {
-  return new Promise((resolve) => setTimeout(() => resolve([...MOCK_BUNDLE_TYPES]), 50))
+  return new Promise((resolve) => setTimeout(() => resolve([...getReferenceBundleTypes()]), 50))
 }
 
-/** Mock categories */
+/** Mock categories - from reference data */
 export function fetchCategories(): Promise<Category[]> {
   return new Promise((resolve) =>
-    setTimeout(() => resolve([...MOCK_CATEGORIES].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))), 50)
+    setTimeout(() => resolve([...getReferenceCategories()].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))), 50)
   )
 }
 
-/** Mock component options */
+/** Mock component options - from reference data */
 export function fetchComponentOptions(): Promise<ComponentOption[]> {
-  return new Promise((resolve) => setTimeout(() => resolve([...MOCK_COMPONENT_OPTIONS]), 50))
+  return new Promise((resolve) => setTimeout(() => resolve([...getReferenceComponentOptions()]), 50))
 }
